@@ -1,5 +1,11 @@
 import { AppProps } from 'next/app'
 import { globalStyles } from '../styles'
+import { Nunito } from '@next/font/google';
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 globalStyles()
 
@@ -8,6 +14,10 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps) {
   return (
-    <Component {...pageProps} />
+    <div
+      className={`${nunito.className}`}
+    >
+      <Component {...pageProps} />
+    </div>
   )
 }
