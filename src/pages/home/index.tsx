@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 
 import { Container, CoverImage, LoginBox, LoginButton } from "./styles";
 
@@ -7,19 +7,11 @@ import bookWiseCover from "../../assets/book-wise-cover.png";
 import googleIcon from '../../assets/google-icon.svg'
 import githubIcon from '../../assets/github-icon.svg'
 import rocketLaunchIcon from '../../assets/rocket-launch-icon.svg'
-import { useRouter } from "next/router";
 
 export default function Home() {
 
-  const router = useRouter()
-  const { data: session } = useSession()
-
-  console.log(session?.user)
-
   async function handleGithubSignIn() {
     await signIn('github')
-
-    await router.push('/books')
   }
 
   return (
