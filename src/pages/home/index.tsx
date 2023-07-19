@@ -1,12 +1,27 @@
 import Image from "next/image";
+import { signIn, useSession } from 'next-auth/react'
+
 import { Container, CoverImage, LoginBox, LoginButton } from "./styles";
 
 import bookWiseCover from "../../assets/book-wise-cover.png";
 import googleIcon from '../../assets/google-icon.svg'
 import githubIcon from '../../assets/github-icon.svg'
 import rocketLaunchIcon from '../../assets/rocket-launch-icon.svg'
+import { useRouter } from "next/router";
 
 export default function Home() {
+
+  const router = useRouter()
+  const { data: session } = useSession()
+
+  console.log(session?.user)
+
+  async function handleGithubSignIn() {
+    await signIn('github')
+
+    await router.push('/books')
+  }
+
   return (
     <Container>
       <CoverImage
@@ -24,7 +39,7 @@ export default function Home() {
             <Image src={googleIcon} alt="Google Logo" width={32} height={32} />
             Sign in with Google
           </LoginButton>
-          <LoginButton type="button">
+          <LoginButton type="button" onClick={() => handleGithubSignIn()}>
             <Image src={githubIcon} alt="Github Logo" width={32} height={32} />
             Sign in with Github
           </LoginButton>

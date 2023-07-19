@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app'
 import { globalStyles } from '../styles'
 import { Nunito } from "next/font/google";
+import { SessionProvider } from 'next-auth/react';
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -14,10 +15,12 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps) {
   return (
-    <div
-      className={`${nunito.className}`}
-    >
-      <Component {...pageProps} />
-    </div>
+    <SessionProvider session={session}>
+      <div
+        className={`${nunito.className}`}
+      >
+        <Component {...pageProps} />
+      </div>
+    </SessionProvider>
   )
 }
