@@ -22,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     if (session?.user) {
-      router.push('/dashboard')
+      router.push('/books')
     }
   }, [session, router])
 
