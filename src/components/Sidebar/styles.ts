@@ -1,6 +1,7 @@
 import NextLink from 'next/link'
 
 import { styled } from "../../styles";
+import Image from 'next/image';
 
 export const SidebarContainer = styled('div', {
   padding: '$10 3rem $6',
@@ -102,4 +103,41 @@ export const SignInRedirectButton = styled('button', {
   'svg': {
     color: '$green100'
   }
+})
+
+export const SignOutButton = styled('button', {
+  all: 'unset',
+
+  marginTop: 'auto',
+  padding: '$1',
+  borderRadius: '$md',
+
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '$3',
+
+  fontSize: '$md',
+  lineHeight: '$short',
+  fontWeight: '$bold',
+  color: '$gray200',
+
+  cursor: 'pointer',
+
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.05)',
+    transition: 'background-color 0.2s ease-in-out',
+  },
+
+  'svg': {
+    color: '#F75A68'
+  }
+})
+
+export const Avatar = styled(Image, {
+  borderRadius: '$full',
+  width: '32px',
+  height: '32px',
+
+  border: '1px solid $gradient-vertical',
 })
