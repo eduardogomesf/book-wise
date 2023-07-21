@@ -21,12 +21,12 @@ export default function Home() {
   }
 
   async function handleAccessAsVisitor() {
-    await router.push('/books')
+    await router.push('/start')
   }
 
   useEffect(() => {
     if (session?.user) {
-      router.push('/books')
+      router.push('/start')
     }
   }, [session, router])
 

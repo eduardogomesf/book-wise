@@ -1,6 +1,6 @@
 import { Sidebar } from "../../components/Sidebar";
 
-export default function Books() {
+export default function Start() {
   return (
     <div>
       <Sidebar />
