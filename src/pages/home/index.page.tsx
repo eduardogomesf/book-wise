@@ -20,6 +20,10 @@ export default function Home() {
     await signIn('github')
   }
 
+  async function handleAccessAsVisitor() {
+    await router.push('/books')
+  }
+
   useEffect(() => {
     if (session?.user) {
       router.push('/books')
@@ -47,7 +51,7 @@ export default function Home() {
             <Image src={githubIcon} alt="Github Logo" width={32} height={32} />
             Sign in with Github
           </LoginButton>
-          <LoginButton type="button">
+          <LoginButton type="button" onClick={handleAccessAsVisitor}>
             <Image src={rocketLaunchIcon} alt="Rocket Launch Logo" width={32} height={32} />
             Access as a visitor
           </LoginButton>
