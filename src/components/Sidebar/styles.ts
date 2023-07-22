@@ -133,11 +133,3 @@ export const SignOutButton = styled('button', {
     color: '#F75A68'
   }
 })
-
-export const Avatar = styled(Image, {
-  borderRadius: '$full',
-  width: '32px',
-  height: '32px',
-
-  border: '1px solid $gradient-vertical',
-})

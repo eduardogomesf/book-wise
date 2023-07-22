@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Navbar, SidebarContainer, Link, SignInRedirectButton, SignOutButton, Avatar } from "./styles";
+import { Navbar, SidebarContainer, Link, SignInRedirectButton, SignOutButton } from "./styles";
 
 import logo from '../../assets/logo.png'
 import { Binoculars, ChartLineUp, SignIn, SignOut, User } from "phosphor-react";
@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/axios";
+import { Avatar } from "../Avatar";
 
 type User = {
   id: string
@@ -69,7 +70,7 @@ export function Sidebar() {
 
       {user ? (
         <SignOutButton onClick={handleSignOut}>
-          <Avatar src={String(user?.avatarUrl)} quality={100} alt="Profile picture" width={32} height={32} />
+          <Avatar src={String(user?.avatarUrl)} alt="Profile picture" width={32} height={32} />
           {getFirstName(user.name)}
           <SignOut width={24} height={24} />
         </SignOutButton>
