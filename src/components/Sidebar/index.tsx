@@ -2,21 +2,17 @@ import Image from "next/image";
 import { Navbar, SidebarContainer, Link, SignInRedirectButton, SignOutButton } from "./styles";
 
 import logo from '../../assets/logo.png'
-import { Binoculars, ChartLineUp, SignIn, SignOut, User } from "phosphor-react";
+import { Binoculars, ChartLineUp, SignIn, SignOut, User as UserIcon } from "phosphor-react";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../../lib/axios";
 import { Avatar } from "../Avatar";
+import { User } from "../../types/user";
 
-type User = {
-  id: string
-  email: string
-  name: string
-  avatarUrl: string
+interface SidebarProps {
+  user: User | null | undefined
 }
 
-export function Sidebar() {
+export function Sidebar({ user }: SidebarProps) {
   const router = useRouter()
   const { data: session } = useSession()
 
@@ -39,16 +35,6 @@ export function Sidebar() {
     }
   }
 
-  const { data: user } = useQuery<User | null>(['user', session?.user.id], async () => {
-    if (!session) {
-      return null
-    }
-
-    const getUserByIdResponse = await api.get(`/users/${session.user.id}`)
-
-    return getUserByIdResponse.data
-  })
-
   return (
     <SidebarContainer>
       <Image src={logo} alt='Logo' quality={100} />
@@ -63,7 +49,7 @@ export function Sidebar() {
           Explore
         </Link>
         <Link href={"/profile"} active={currentRoute === '/profile'}>
-          <User width={24} height={24} />
+          <UserIcon width={24} height={24} />
           Profile
         </Link>
       </Navbar>
