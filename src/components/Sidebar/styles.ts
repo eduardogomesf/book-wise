@@ -1,12 +1,10 @@
 import NextLink from 'next/link'
 
 import { styled } from "../../styles";
-import Image from 'next/image';
 
 export const SidebarContainer = styled('div', {
   padding: '$10 3rem $6',
-  margin: '$5 0 $4 $5',
-  height: 'calc(100vh - 40px)',
+  height: '96vh',
   width: '100%',
   maxWidth: '232px',
   borderRadius: '$md',
