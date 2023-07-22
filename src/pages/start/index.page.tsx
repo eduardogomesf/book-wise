@@ -9,8 +9,13 @@ import { api } from "../../lib/axios";
 import Image from "next/image";
 import { ReviewWithBook } from "../../types/review";
 import { formatDistanceToNow } from "date-fns";
+import { GetServerSideProps } from "next";
 
-export default function Start() {
+type StartProps = {
+  latestReviews: ReviewWithBook[]
+}
+
+export default function Start({ latestReviews }: StartProps) {
   const { data: session } = useSession()
 
   function handleCoverImagePath(imageUrl: string) {
@@ -25,33 +30,6 @@ export default function Start() {
     const getUserByIdResponse = await api.get(`/users/${session.user.id}`)
 
     return getUserByIdResponse.data
-  })
-
-  const { data: reviews } = useQuery<ReviewWithBook[] | []>(['reviews', session?.user.id], async () => {
-    const getLatestReviewsResponse = await api.get(`/reviews/latest`)
-
-    const rawReviews = getLatestReviewsResponse.data?.reviews
-
-    const reviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => {
-      return {
-        id: rawReview.id,
-        rate: rawReview.rate,
-        description: rawReview.description,
-        createdAt: formatDistanceToNow(new Date(rawReview.createdAt)),
-        user: {
-          id: rawReview.user.id,
-          name: rawReview.user.name,
-          avatarUrl: rawReview.user.avatarUrl
-        },
-        book: {
-          id: rawReview.book.id,
-          name: rawReview.book.name,
-          coverUrl: handleCoverImagePath(rawReview.book.coverUrl),
-        }
-      }
-    })
-
-    return reviews
   })
 
   return (
@@ -69,31 +47,31 @@ export default function Start() {
         <RecentReviewsList>
           <span>Latest reviews</span>
 
-          {reviews?.map((review) => (
-            <RecentReviewItem key={review.id}>
+          {latestReviews?.map((latestReview) => (
+            <RecentReviewItem key={latestReview.id}>
               <RecentReviewItemHeader>
                 <ProfileInfo>
-                  <Avatar src={review.user.avatarUrl} alt={"Profile picture"} width={32} height={32} />
+                  <Avatar src={latestReview.user.avatarUrl} alt={"Profile picture"} width={32} height={32} />
                   <div>
-                    <strong>{review.user.name}</strong>
-                    <span>{String(review.createdAt)}</span>
+                    <strong>{latestReview.user.name}</strong>
+                    <span>{String(latestReview.createdAt)}</span>
                   </div>
                 </ProfileInfo>
                 <RatingBox>
                   {Array.from({ length: 5 }).map((_, index) => (
-                    <Star key={index} size={16} weight={(index + 1) <= review.rate ? "fill" : "regular"} />
+                    <Star key={index} size={16} weight={(index + 1) <= latestReview.rate ? "fill" : "regular"} />
                   ))}
                 </RatingBox>
               </RecentReviewItemHeader>
 
               <RecentReviewItemContent>
-                <Image src={review.book.coverUrl} alt={"Book cover"} quality={80} width={108} height={152} />
+                <Image src={handleCoverImagePath(latestReview.book.coverUrl)} alt={"Book cover"} quality={80} width={108} height={152} />
                 <Content>
                   <div>
-                    <strong>{review.book.name}</strong>
-                    <span>{review.book.author}</span>
+                    <strong>{latestReview.book.name}</strong>
+                    <span>{latestReview.book.author}</span>
                   </div>
-                  <p>{review.description}</p>
+                  <p>{latestReview.description}</p>
                 </Content>
               </RecentReviewItemContent>
             </RecentReviewItem>
@@ -103,4 +81,35 @@ export default function Start() {
       </MainContent>
     </StartContainer>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (): Promise<any> => {
+  const getLatestReviewsResponse = await api.get(`http://localhost:3000/api/reviews/latest`)
+
+  const rawReviews = getLatestReviewsResponse.data?.reviews
+
+  const latestReviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => {
+    return {
+      id: rawReview.id,
+      rate: rawReview.rate,
+      description: rawReview.description,
+      createdAt: formatDistanceToNow(new Date(rawReview.createdAt)),
+      user: {
+        id: rawReview.user.id,
+        name: rawReview.user.name,
+        avatarUrl: rawReview.user.avatarUrl
+      },
+      book: {
+        id: rawReview.book.id,
+        name: rawReview.book.name,
+        coverUrl: rawReview.book.coverUrl,
+      }
+    }
+  })
+
+  return {
+    props: {
+      latestReviews
+    }
+  }
 }
