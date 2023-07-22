@@ -104,7 +104,7 @@ export const Content = styled('div', {
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-between',
+  gap: '$5',
 
   '> div': {
     strong: {

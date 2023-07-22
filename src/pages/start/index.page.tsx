@@ -7,9 +7,15 @@ import { User } from "../../types/user";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../lib/axios";
 import Image from "next/image";
+import { ReviewWithBook } from "../../types/review";
+import { formatDistanceToNow } from "date-fns";
 
 export default function Start() {
   const { data: session } = useSession()
+
+  function handleCoverImagePath(imageUrl: string) {
+    return `${imageUrl.replace("public", "").replace(".jpg", ".png")}`
+  }
 
   const { data: user } = useQuery<User | null>(['user', session?.user.id], async () => {
     if (!session) {
@@ -21,6 +27,33 @@ export default function Start() {
     return getUserByIdResponse.data
   })
 
+  const { data: reviews } = useQuery<ReviewWithBook[] | []>(['reviews', session?.user.id], async () => {
+    const getLatestReviewsResponse = await api.get(`/reviews/latest`)
+
+    const rawReviews = getLatestReviewsResponse.data?.reviews
+
+    const reviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => {
+      return {
+        id: rawReview.id,
+        rate: rawReview.rate,
+        description: rawReview.description,
+        createdAt: formatDistanceToNow(new Date(rawReview.createdAt)),
+        user: {
+          id: rawReview.user.id,
+          name: rawReview.user.name,
+          avatarUrl: rawReview.user.avatarUrl
+        },
+        book: {
+          id: rawReview.book.id,
+          name: rawReview.book.name,
+          coverUrl: handleCoverImagePath(rawReview.book.coverUrl),
+        }
+      }
+    })
+
+    return reviews
+  })
+
   return (
     <StartContainer>
       <Sidebar user={user} />
@@ -29,44 +62,42 @@ export default function Start() {
         <Header>
           <ChartLineUp size={32} />
           <h1>
-            Início
+            Home
           </h1>
         </Header>
 
         <RecentReviewsList>
           <span>Latest reviews</span>
 
-          <RecentReviewItem>
-            <RecentReviewItemHeader>
-              <ProfileInfo>
-                <Avatar src={"https://avatars.githubusercontent.com/u/58858236?v=4"} alt={"Any"} width={32} height={32} />
-                <div>
-                  <strong>Jaxson Dias</strong>
-                  <span>Ontem</span>
-                </div>
-              </ProfileInfo>
-              <RatingBox>
-                <Star size={16} weight={true ? "fill" : "regular"} />
-                <Star size={16} weight={true ? "fill" : "regular"} />
-                <Star size={16} weight={true ? "fill" : "regular"} />
-                <Star size={16} weight={true ? "fill" : "regular"} />
-                <Star size={16} weight={false ? "fill" : "regular"} />
-              </RatingBox>
-            </RecentReviewItemHeader>
+          {reviews?.map((review) => (
+            <RecentReviewItem key={review.id}>
+              <RecentReviewItemHeader>
+                <ProfileInfo>
+                  <Avatar src={review.user.avatarUrl} alt={"Profile picture"} width={32} height={32} />
+                  <div>
+                    <strong>{review.user.name}</strong>
+                    <span>{String(review.createdAt)}</span>
+                  </div>
+                </ProfileInfo>
+                <RatingBox>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} size={16} weight={(index + 1) <= review.rate ? "fill" : "regular"} />
+                  ))}
+                </RatingBox>
+              </RecentReviewItemHeader>
 
-            <RecentReviewItemContent>
-              <Image src={"https://avatars.githubusercontent.com/u/58858236?v=4"} alt={"Any"} quality={100} width={108} height={152} />
-              <Content>
-                <div>
-                  <strong>O Hobbit</strong>
-                  <span>J.R.R. Tolkien</span>
-                </div>
-                <p>
-                  Semper et sapien proin vitae nisi. Feugiat neque integer donec et aenean posuere amet ultrices. Cras fermentum id pulvinar varius leo a in. Amet libero pharetra nunc elementum fringilla velit ipsum. Sed vulputate massa velit nibh...
-                </p>
-              </Content>
-            </RecentReviewItemContent>
-          </RecentReviewItem>
+              <RecentReviewItemContent>
+                <Image src={review.book.coverUrl} alt={"Book cover"} quality={80} width={108} height={152} />
+                <Content>
+                  <div>
+                    <strong>{review.book.name}</strong>
+                    <span>{review.book.author}</span>
+                  </div>
+                  <p>{review.description}</p>
+                </Content>
+              </RecentReviewItemContent>
+            </RecentReviewItem>
+          ))}
 
         </RecentReviewsList>
       </MainContent>
