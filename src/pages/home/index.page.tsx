@@ -9,6 +9,9 @@ import githubIcon from '../../assets/github-icon.svg'
 import rocketLaunchIcon from '../../assets/rocket-launch-icon.svg'
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth].api";
 
 export default function Home() {
 
@@ -26,7 +29,7 @@ export default function Home() {
 
   useEffect(() => {
     if (session?.user) {
-      router.push('/start')
+      //router.push('/start')
     }
   }, [session, router])
 
@@ -59,4 +62,21 @@ export default function Home() {
       </LoginBox>
     </Container>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }): Promise<any> => {
+  const session = await getServerSession(req, res, authOptions)
+
+  if (session?.user) {
+    return {
+      redirect: {
+        destination: '/start',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
