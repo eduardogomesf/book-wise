@@ -85,16 +85,6 @@ export const ProfileInfo = styled('div', {
   }
 })
 
-export const RatingBox = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '$1',
-
-  svg: {
-    color: '$purple100'
-  }
-})
-
 export const RecentReviewItemContent = styled('div', {
   display: 'flex',
   alignItems: 'flex-start',

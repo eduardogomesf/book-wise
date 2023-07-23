@@ -1,4 +1,4 @@
-import { CaretRight, ChartLineUp, Star } from "phosphor-react";
+import { CaretRight, ChartLineUp } from "phosphor-react";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -12,7 +12,6 @@ import {
   Content, Header,
   MainContent,
   ProfileInfo,
-  RatingBox,
   RecentReviewItem,
   RecentReviewItemContent,
   RecentReviewItemHeader,
@@ -30,6 +29,7 @@ import { api } from "../../lib/axios";
 import { ReviewWithBook } from "../../types/review";
 import { authOptions } from "../api/auth/[...nextauth].api";
 import { mapReviewForStartPage } from "../../mappers/review";
+import { Rating } from "../../components/Rating";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
@@ -83,11 +83,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
               <UserReviewContent>
                 <div>
                   <span>{String(userLastReview.createdAt)}</span>
-                  <RatingBox>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star key={index} size={16} weight={(index + 1) <= userLastReview.rate ? "fill" : "regular"} />
-                    ))}
-                  </RatingBox>
+                  <Rating rate={userLastReview.rate} />
                 </div>
 
                 <strong>{userLastReview.book.name}</strong>
@@ -113,11 +109,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
                     <span>{String(latestReview.createdAt)}</span>
                   </div>
                 </ProfileInfo>
-                <RatingBox>
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Star key={index} size={16} weight={(index + 1) <= latestReview.rate ? "fill" : "regular"} />
-                  ))}
-                </RatingBox>
+                <Rating rate={latestReview.rate} />
               </RecentReviewItemHeader>
 
               <RecentReviewItemContent>
