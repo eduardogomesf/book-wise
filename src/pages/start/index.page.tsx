@@ -1,23 +1,42 @@
-import { ChartLineUp, Star } from "phosphor-react";
-import { Sidebar } from "../../components/Sidebar";
-import { Content, Header, MainContent, ProfileInfo, RatingBox, RecentReviewItem, RecentReviewItemContent, RecentReviewItemHeader, RecentReviewsList, StartContainer } from "./styles";
-import { Avatar } from "../../components/Avatar";
-import { useSession } from "next-auth/react";
-import { User } from "../../types/user";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../../lib/axios";
-import Image from "next/image";
-import { ReviewWithBook } from "../../types/review";
-import { formatDistanceToNow } from "date-fns";
+import { CaretRight, ChartLineUp, Star } from "phosphor-react";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+
+import { Sidebar } from "../../components/Sidebar";
+import { Avatar } from "../../components/Avatar";
+import {
+  BookCoverContainer,
+  Content, Header,
+  MainContent,
+  ProfileInfo,
+  RatingBox,
+  RecentReviewItem,
+  RecentReviewItemContent,
+  RecentReviewItemHeader,
+  RecentReviewsList,
+  RedirectButton,
+  StartContainer,
+  UserReviewContainer,
+  UserReviewContent,
+  UserReviewItem,
+  UserReviewLabelContainer
+} from "./styles";
+
+import { User } from "../../types/user";
+import { api } from "../../lib/axios";
+import { ReviewWithBook } from "../../types/review";
 import { authOptions } from "../api/auth/[...nextauth].api";
+import { mapReviewForStartPage } from "../../mappers/review";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
+  userLastReview: ReviewWithBook
 }
 
-export default function Start({ latestReviews }: StartProps) {
+export default function Start({ latestReviews, userLastReview }: StartProps) {
   const { data: session } = useSession()
 
   function handleCoverImagePath(imageUrl: string) {
@@ -34,6 +53,7 @@ export default function Start({ latestReviews }: StartProps) {
     return getUserByIdResponse.data
   })
 
+  console.log(userLastReview)
   return (
     <StartContainer>
       <Sidebar user={user} />
@@ -45,6 +65,40 @@ export default function Start({ latestReviews }: StartProps) {
             Start
           </h1>
         </Header>
+
+        {session && userLastReview && (
+          <UserReviewContainer>
+            <UserReviewLabelContainer>
+              <span>Your last review</span>
+
+              <RedirectButton href={""}>
+                See all
+                <CaretRight size={16} />
+              </RedirectButton>
+            </UserReviewLabelContainer>
+
+            <UserReviewItem>
+              <Image src={handleCoverImagePath(userLastReview.book.coverUrl)} alt={"Book cover"} quality={80} width={108} height={152} />
+
+              <UserReviewContent>
+                <div>
+                  <span>{String(userLastReview.createdAt)}</span>
+                  <RatingBox>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star key={index} size={16} weight={(index + 1) <= userLastReview.rate ? "fill" : "regular"} />
+                    ))}
+                  </RatingBox>
+                </div>
+
+                <strong>{userLastReview.book.name}</strong>
+                <span>{userLastReview.book.author}</span>
+
+                <p>{userLastReview.description}</p>
+              </UserReviewContent>
+            </UserReviewItem>
+          </UserReviewContainer>
+        )}
+
 
         <RecentReviewsList>
           <span>Latest reviews</span>
@@ -67,7 +121,9 @@ export default function Start({ latestReviews }: StartProps) {
               </RecentReviewItemHeader>
 
               <RecentReviewItemContent>
-                <Image src={handleCoverImagePath(latestReview.book.coverUrl)} alt={"Book cover"} quality={80} width={108} height={152} />
+                <BookCoverContainer>
+                  <Image src={handleCoverImagePath(latestReview.book.coverUrl)} alt={"Book cover"} quality={80} width={108} height={152} />
+                </BookCoverContainer>
                 <Content>
                   <div>
                     <strong>{latestReview.book.name}</strong>
@@ -96,30 +152,25 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }): Prom
     }
   })
 
-  const rawReviews = getLatestReviewsResponse.data?.reviews
+  let userLastReview = null
 
-  const latestReviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => {
-    return {
-      id: rawReview.id,
-      rate: rawReview.rate,
-      description: rawReview.description,
-      createdAt: formatDistanceToNow(new Date(rawReview.createdAt)),
-      user: {
-        id: rawReview.user.id,
-        name: rawReview.user.name,
-        avatarUrl: rawReview.user.avatarUrl
-      },
-      book: {
-        id: rawReview.book.id,
-        name: rawReview.book.name,
-        coverUrl: rawReview.book.coverUrl,
-      }
+  if (userId) {
+    const userLastReviewResponse = await api.get(`http://localhost:3000/api/users/${userId}/reviews/last`)
+
+    const rawUserLastReview = userLastReviewResponse.data?.lastReview
+
+    if (rawUserLastReview) {
+      userLastReview = mapReviewForStartPage(rawUserLastReview)
     }
-  })
+  }
+
+  const rawReviews = getLatestReviewsResponse.data?.reviews
+  const latestReviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => mapReviewForStartPage(rawReview))
 
   return {
     props: {
-      latestReviews
+      latestReviews,
+      userLastReview
     }
   }
 }

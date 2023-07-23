@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { styled } from "../../styles";
 
 export const StartContainer = styled('div', {
@@ -100,6 +101,12 @@ export const RecentReviewItemContent = styled('div', {
   gap: '$5'
 })
 
+export const BookCoverContainer = styled('button', {
+  all: 'unset',
+
+  cursor: 'pointer',
+})
+
 export const Content = styled('div', {
   height: '100%',
   display: 'flex',
@@ -124,5 +131,105 @@ export const Content = styled('div', {
     fontSize: '$sm',
   }
 
+})
+
+export const UserReviewContainer = styled('div', {
+  width: '608px'
+})
+
+export const UserReviewLabelContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+
+  span: {
+    color: '$gray100',
+    fontSize: '$sm',
+    lineHeight: '$base'
+  },
+
+})
+
+export const RedirectButton = styled(Link, {
+  all: 'unset',
+
+  cursor: 'pointer',
+
+  display: 'flex',
+  alignItems: 'center',
+  gap: '$2',
+
+  color: '$purple100',
+  fontSize: '$sm',
+  fontWeight: '$bold',
+  lineHeight: '$base',
+
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.05)',
+    transition: 'background-color 0.2s ease-in-out',
+  },
+})
+
+export const UserReviewItem = styled('button', {
+  all: 'unset',
+
+  cursor: 'pointer',
+
+  boxSizing: 'border-box',
+  marginTop: '$4',
+  padding: '$6 $5',
+  width: '100%',
+
+  backgroundColor: '$gray600',
+  borderRadius: '$md',
+
+  display: 'flex',
+  gap: '$6',
+})
+
+export const UserReviewContent = styled('div', {
+  flex: 1,
+
+  overflow: 'hidden',
+
+  div: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    '> span': {
+      color: '$gray300',
+      fontSize: '$sm',
+      lineHeight: '$base'
+    }
+  },
+
+  '> strong': {
+    display: 'block',
+    marginTop: '$3',
+
+    color: '$gray100',
+    lineHeight: '$short',
+    fontSize: '$md',
+    fontWeight: '$bold',
+  },
+
+  '> span': {
+    display: 'block',
+
+    color: '$gray400',
+    lineHeight: '$base',
+    fontSize: '$sm',
+    fontWeight: '$regular',
+  },
+
+  '> p': {
+    marginTop: '$6',
+
+    color: '$gray300',
+    lineHeight: '$base',
+    fontSize: '$sm',
+    fontWeight: '$regular',
+  }
 })
 
