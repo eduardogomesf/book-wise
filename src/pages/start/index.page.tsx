@@ -6,15 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
 import { Sidebar } from "../../components/Sidebar";
-import { Avatar } from "../../components/Avatar";
 import {
-  BookCoverContainer,
-  Content, Header,
+  Header,
   MainContent,
-  ProfileInfo,
-  RecentReviewItem,
-  RecentReviewItemContent,
-  RecentReviewItemHeader,
   RecentReviewsList,
   RedirectButton,
   StartContainer,
@@ -30,6 +24,8 @@ import { ReviewWithBook } from "../../types/review";
 import { authOptions } from "../api/auth/[...nextauth].api";
 import { mapReviewForStartPage } from "../../mappers/review";
 import { Rating } from "../../components/Rating";
+import { handleCoverImagePath } from "../../utils";
+import { RecentReview } from "./components/RecentReview";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
@@ -38,10 +34,6 @@ type StartProps = {
 
 export default function Start({ latestReviews, userLastReview }: StartProps) {
   const { data: session } = useSession()
-
-  function handleCoverImagePath(imageUrl: string) {
-    return `${imageUrl.replace("public", "").replace(".jpg", ".png")}`
-  }
 
   const { data: user } = useQuery<User | null>(['user', session?.user.id], async () => {
     if (!session) {
@@ -53,7 +45,6 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
     return getUserByIdResponse.data
   })
 
-  console.log(userLastReview)
   return (
     <StartContainer>
       <Sidebar user={user} />
@@ -98,35 +89,9 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
 
         <RecentReviewsList>
           <span>Latest reviews</span>
-
           {latestReviews?.map((latestReview) => (
-            <RecentReviewItem key={latestReview.id}>
-              <RecentReviewItemHeader>
-                <ProfileInfo>
-                  <Avatar src={latestReview.user.avatarUrl} width={32} height={32} />
-                  <div>
-                    <strong>{latestReview.user.name}</strong>
-                    <span>{String(latestReview.createdAt)}</span>
-                  </div>
-                </ProfileInfo>
-                <Rating rate={latestReview.rate} />
-              </RecentReviewItemHeader>
-
-              <RecentReviewItemContent>
-                <BookCoverContainer>
-                  <Image src={handleCoverImagePath(latestReview.book.coverUrl)} alt={"Book cover"} quality={80} width={108} height={152} />
-                </BookCoverContainer>
-                <Content>
-                  <div>
-                    <strong>{latestReview.book.name}</strong>
-                    <span>{latestReview.book.author}</span>
-                  </div>
-                  <p>{latestReview.description}</p>
-                </Content>
-              </RecentReviewItemContent>
-            </RecentReviewItem>
+            <RecentReview review={latestReview} key={latestReview.id} as="li" />
           ))}
-
         </RecentReviewsList>
       </MainContent>
     </StartContainer>
