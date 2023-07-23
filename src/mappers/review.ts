@@ -6,7 +6,7 @@ export function mapReviewForStartPage(review: ReviewWithBook) {
     id: review.id,
     rate: review.rate,
     description: review.description,
-    createdAt: formatDistanceToNow(new Date(review.createdAt)),
+    createdAt: formatDistanceToNow(new Date(review.createdAt), { addSuffix: true }),
     user: {
       id: review.user.id,
       name: review.user.name,
