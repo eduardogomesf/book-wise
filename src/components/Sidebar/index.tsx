@@ -56,7 +56,7 @@ export function Sidebar({ user }: SidebarProps) {
 
       {user ? (
         <SignOutButton onClick={handleSignOut}>
-          <Avatar src={String(user?.avatarUrl)} alt="Profile picture" width={32} height={32} />
+          <Avatar src={String(user?.avatarUrl)} width={32} height={32} />
           {getFirstName(user.name)}
           <SignOut width={24} height={24} />
         </SignOutButton>

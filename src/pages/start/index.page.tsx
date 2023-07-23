@@ -103,7 +103,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
             <RecentReviewItem key={latestReview.id}>
               <RecentReviewItemHeader>
                 <ProfileInfo>
-                  <Avatar src={latestReview.user.avatarUrl} alt={"Profile picture"} width={32} height={32} />
+                  <Avatar src={latestReview.user.avatarUrl} width={32} height={32} />
                   <div>
                     <strong>{latestReview.user.name}</strong>
                     <span>{String(latestReview.createdAt)}</span>

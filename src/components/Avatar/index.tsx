@@ -1,10 +1,12 @@
 import { ImageProps } from "next/image"
 import { AvatarContainer } from "./styles"
 
-type AvatarParams = ImageProps
+type MakePropertyOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+type AvatarParams = MakePropertyOptional<ImageProps, 'alt'>
 
 export function Avatar(props: AvatarParams) {
   return (
-    <AvatarContainer {...props} quality={100} />
+    <AvatarContainer {...props} alt={"Profile picture"} quality={100} />
   )
 }
