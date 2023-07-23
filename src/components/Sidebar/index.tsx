@@ -62,7 +62,7 @@ export function Sidebar({ user }: SidebarProps) {
         </SignOutButton>
       ) : (
         <SignInRedirectButton onClick={handleSignInRedirect}>
-          Sign In
+          Sign in
           <SignIn width={24} height={24} />
         </SignInRedirectButton>
       )}
