@@ -10,6 +10,18 @@ export default async function handle(
     return res.status(405).end()
   }
 
+  const userId = req.query.userId ? String(req.query.userId) : null
+
+  const whereClause = {}
+
+  if (userId) {
+    Object.assign(whereClause, {
+      user_id: {
+        not: userId
+      }
+    })
+  }
+
   const reviewWithBook = await prisma.rating.findMany({
     orderBy: {
       created_at: 'desc'
@@ -17,7 +29,8 @@ export default async function handle(
     include: {
       user: true,
       book: true
-    }
+    },
+    where: whereClause
   })
 
   if (!reviewWithBook || reviewWithBook.length === 0) {

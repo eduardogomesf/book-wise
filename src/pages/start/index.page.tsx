@@ -10,6 +10,8 @@ import Image from "next/image";
 import { ReviewWithBook } from "../../types/review";
 import { formatDistanceToNow } from "date-fns";
 import { GetServerSideProps } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth].api";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
@@ -40,7 +42,7 @@ export default function Start({ latestReviews }: StartProps) {
         <Header>
           <ChartLineUp size={32} />
           <h1>
-            Home
+            Start
           </h1>
         </Header>
 
@@ -83,8 +85,16 @@ export default function Start({ latestReviews }: StartProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (): Promise<any> => {
-  const getLatestReviewsResponse = await api.get(`http://localhost:3000/api/reviews/latest`)
+export const getServerSideProps: GetServerSideProps = async ({ req, res }): Promise<any> => {
+  const session = await getServerSession(req, res, authOptions)
+
+  const userId = session?.user?.id ?? null
+
+  const getLatestReviewsResponse = await api.get(`http://localhost:3000/api/reviews/latest`, {
+    params: {
+      userId
+    }
+  })
 
   const rawReviews = getLatestReviewsResponse.data?.reviews
 
