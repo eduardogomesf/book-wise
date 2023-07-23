@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 
 import { Sidebar } from "../../components/Sidebar";
 import {
@@ -13,8 +12,6 @@ import {
   RedirectButton,
   StartContainer,
   UserReviewContainer,
-  UserReviewContent,
-  UserReviewItem,
   UserReviewLabelContainer
 } from "./styles";
 
@@ -23,9 +20,8 @@ import { api } from "../../lib/axios";
 import { ReviewWithBook } from "../../types/review";
 import { authOptions } from "../api/auth/[...nextauth].api";
 import { mapReviewForStartPage } from "../../mappers/review";
-import { Rating } from "../../components/Rating";
-import { handleCoverImagePath } from "../../utils";
 import { RecentReview } from "./components/RecentReview";
+import { UserReview } from "./components/UserReview";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
@@ -68,21 +64,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
               </RedirectButton>
             </UserReviewLabelContainer>
 
-            <UserReviewItem>
-              <Image src={handleCoverImagePath(userLastReview.book.coverUrl)} alt={"Book cover"} quality={80} width={108} height={152} />
-
-              <UserReviewContent>
-                <div>
-                  <span>{String(userLastReview.createdAt)}</span>
-                  <Rating rate={userLastReview.rate} />
-                </div>
-
-                <strong>{userLastReview.book.name}</strong>
-                <span>{userLastReview.book.author}</span>
-
-                <p>{userLastReview.description}</p>
-              </UserReviewContent>
-            </UserReviewItem>
+            <UserReview review={userLastReview} />
           </UserReviewContainer>
         )}
 
