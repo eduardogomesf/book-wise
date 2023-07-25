@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
+import { Book } from "../../../types/book";
 
 (BigInt.prototype as any).toJSON = function() {
   return Number(this)
@@ -13,7 +14,7 @@ export default async function handle(
     return res.status(405).end()
   }
 
-  const books = await prisma.$queryRaw`
+  const rawBooks = await prisma.$queryRaw<any[]>`
     SELECT b.cover_url, b.id, b.author, b.name, COUNT(r.id) AS number_of_ratings
     FROM books b
     JOIN ratings r ON r.book_id = b.id
@@ -21,6 +22,16 @@ export default async function handle(
     ORDER BY number_of_ratings DESC
     LIMIT 5;
   `
+
+  const books: Book[] = rawBooks.map((book) => {
+    return {
+      id: book.id,
+      name: book.name,
+      author: book.author,
+      coverUrl: book.cover_url,
+      numberOfRatings: book.number_of_ratings,
+    }
+  })
 
   return res.json({ books })
 }
