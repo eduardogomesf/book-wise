@@ -32,13 +32,15 @@ import { UserReview } from "./components/UserReview";
 import Image from "next/image";
 import { Rating } from "../../components/Rating";
 import { handleCoverImagePath } from "../../utils";
+import { Book } from "../../types/book";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
   userLastReview: ReviewWithBook
+  popularBooks: Book[]
 }
 
-export default function Start({ latestReviews, userLastReview }: StartProps) {
+export default function Start({ latestReviews = [], userLastReview, popularBooks = [] }: StartProps) {
   const { data: session } = useSession()
 
   const { data: user } = useQuery<User | null>(['user', session?.user.id], async () => {
@@ -50,8 +52,6 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
 
     return getUserByIdResponse.data
   })
-
-  const books = latestReviews.map((review) => review.book).slice(0, 5)
 
   return (
     <StartContainer>
@@ -102,7 +102,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
                 </RedirectButton>
               </PopularBooksLabelContainer>
 
-              {books && books.map((book) => (
+              {popularBooks && popularBooks.map((book) => (
                 <PopularBookItem key={book.id}>
                   <Image src={handleCoverImagePath(book.coverUrl)} alt={"Book cover"} quality={80} width={64} height={94} />
                   <div>
@@ -110,7 +110,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
                     <span>{book.author}</span>
 
                     <div>
-                      <Rating rate={4} />
+                      <Rating rate={book.rate ?? 0} />
                     </div>
                   </div>
                 </PopularBookItem>
@@ -148,13 +148,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }): Prom
     }
   }
 
+  const popularBooks = await getPopularBooks()
+
   const rawReviews = getLatestReviewsResponse.data?.reviews
   const latestReviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => mapReviewForStartPage(rawReview))
 
   return {
     props: {
       latestReviews,
-      userLastReview
+      userLastReview,
+      popularBooks
     }
   }
+}
+
+const getPopularBooks = async () => {
+  const response = await api.get(`http://localhost:3000/api/books/popular`)
+  return response.data.books
 }
