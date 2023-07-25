@@ -130,28 +130,19 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }): Prom
 
   const userId = session?.user?.id ?? null
 
-  const getLatestReviewsResponse = await api.get(`http://localhost:3000/api/reviews/latest`, {
-    params: {
-      userId
-    }
-  })
-
   let userLastReview = null
 
   if (userId) {
-    const userLastReviewResponse = await api.get(`http://localhost:3000/api/users/${userId}/reviews/last`)
-
-    const rawUserLastReview = userLastReviewResponse.data?.lastReview
-
-    if (rawUserLastReview) {
-      userLastReview = mapReviewForStartPage(rawUserLastReview)
-    }
+    userLastReview = await getUserLatestReview(userId)
   }
 
-  const popularBooks = await getPopularBooks()
-
-  const rawReviews = getLatestReviewsResponse.data?.reviews
-  const latestReviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => mapReviewForStartPage(rawReview))
+  const [
+    latestReviews,
+    popularBooks
+  ] = await Promise.all([
+    getLatestReviews(userId),
+    getPopularBooks()
+  ])
 
   return {
     props: {
@@ -160,6 +151,30 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }): Prom
       popularBooks
     }
   }
+}
+
+const getLatestReviews = async (userId: string | null | number) => {
+  const getLatestReviewsResponse = await api.get(`http://localhost:3000/api/reviews/latest`, {
+    params: {
+      userId
+    }
+  })
+  const rawReviews = getLatestReviewsResponse.data?.reviews
+
+  const latestReviews: ReviewWithBook[] = rawReviews.map((rawReview: ReviewWithBook) => mapReviewForStartPage(rawReview))
+  return latestReviews
+}
+
+const getUserLatestReview = async (userId: string | number) => {
+  const userLastReviewResponse = await api.get(`http://localhost:3000/api/users/${userId}/reviews/last`)
+
+  const rawUserLastReview = userLastReviewResponse.data?.lastReview
+
+  if (!rawUserLastReview) {
+    return null
+  }
+
+  return mapReviewForStartPage(rawUserLastReview)
 }
 
 const getPopularBooks = async () => {
