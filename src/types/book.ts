@@ -4,4 +4,5 @@ export type Book = {
   author: string
   coverUrl: string
   numberOfRatings?: number
+  rate?: number
 }

@@ -15,7 +15,7 @@ export default async function handle(
   }
 
   const rawBooks = await prisma.$queryRaw<any[]>`
-    SELECT b.cover_url, b.id, b.author, b.name, COUNT(r.id) AS number_of_ratings
+    SELECT b.cover_url, b.id, b.author, b.name, COUNT(r.id) AS number_of_ratings, AVG(r.rate) AS rate
     FROM books b
     JOIN ratings r ON r.book_id = b.id
     GROUP BY b.id, b.cover_url, b.author, b.name
@@ -30,6 +30,7 @@ export default async function handle(
       author: book.author,
       coverUrl: book.cover_url,
       numberOfRatings: book.number_of_ratings,
+      rate: book.rate
     }
   })
 
