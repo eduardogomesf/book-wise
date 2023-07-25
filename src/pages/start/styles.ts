@@ -7,7 +7,7 @@ export const StartContainer = styled('div', {
   display: 'flex'
 })
 
-export const MainContent = styled('main', {
+export const Main = styled('main', {
   marginLeft: '6rem',
   marginTop: '3.125rem',
 
@@ -31,6 +31,21 @@ export const Header = styled('header', {
     fontWeight: '$bold'
   }
 })
+
+export const ContentContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+  gap: '4rem'
+})
+
+export const CenterContent = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$10',
+})
+
+export const RightContent = styled('div', {})
 
 export const RecentReviewsList = styled('ul', {
   listStyle: 'none',

@@ -6,10 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Sidebar } from "../../components/Sidebar";
 import {
+  CenterContent,
+  ContentContainer,
   Header,
-  MainContent,
+  Main,
   RecentReviewsList,
   RedirectButton,
+  RightContent,
   StartContainer,
   UserReviewContainer,
   UserReviewLabelContainer
@@ -45,7 +48,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
     <StartContainer>
       <Sidebar user={user} />
 
-      <MainContent>
+      <Main>
         <Header>
           <ChartLineUp size={32} />
           <h1>
@@ -53,29 +56,38 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
           </h1>
         </Header>
 
-        {session && userLastReview && (
-          <UserReviewContainer>
-            <UserReviewLabelContainer>
-              <span>Your last review</span>
+        <ContentContainer>
+          <CenterContent>
+            {session && userLastReview && (
+              <UserReviewContainer>
+                <UserReviewLabelContainer>
+                  <span>Your last review</span>
 
-              <RedirectButton href={""}>
-                See all
-                <CaretRight size={16} />
-              </RedirectButton>
-            </UserReviewLabelContainer>
+                  <RedirectButton href={""}>
+                    See all
+                    <CaretRight size={16} />
+                  </RedirectButton>
+                </UserReviewLabelContainer>
 
-            <UserReview review={userLastReview} />
-          </UserReviewContainer>
-        )}
+                <UserReview review={userLastReview} />
+              </UserReviewContainer>
+            )}
 
 
-        <RecentReviewsList>
-          <span>Latest reviews</span>
-          {latestReviews?.map((latestReview) => (
-            <RecentReview review={latestReview} key={latestReview.id} as="li" />
-          ))}
-        </RecentReviewsList>
-      </MainContent>
+            <RecentReviewsList>
+              <span>Latest reviews</span>
+              {latestReviews?.map((latestReview) => (
+                <RecentReview review={latestReview} key={latestReview.id} as="li" />
+              ))}
+            </RecentReviewsList>
+          </CenterContent>
+
+          <RightContent>
+          </RightContent>
+        </ContentContainer>
+
+
+      </Main>
     </StartContainer>
   )
 }
