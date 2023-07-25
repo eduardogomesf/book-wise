@@ -122,7 +122,7 @@ export const PopularBookItem = styled('button', {
   boxSizing: 'border-box',
   padding: '$5',
   borderRadius: '$md',
-  border: '1px solid transparent',
+  border: '2px solid transparent',
 
   display: 'flex',
   gap: '$5',
@@ -153,10 +153,9 @@ export const PopularBookItem = styled('button', {
   },
 
   '&:hover': {
-    border: '1px solid $gray500',
-    transition: 'border-color 0.2s ease-in-out',
-
-    transform: 'translateY(-2px)',
+    border: '2px solid $gray500',
+    transform: 'translateY(-1px)',
+    transition: 'border-color 0.2s ease-in-out, , translateY 0.2s ease-in-out',
   }
 
 

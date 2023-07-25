@@ -12,9 +12,17 @@ export const UserReviewItem = styled('button', {
 
   backgroundColor: '$gray600',
   borderRadius: '$md',
+  border: '2px solid transparent',
 
   display: 'flex',
   gap: '$6',
+
+  '&:hover': {
+    border: '2px solid $gray500',
+    transform: 'translateY(-1px)',
+
+    transition: 'border-color 0.2s ease-in-out, translateY 0.2s ease-in-out',
+  }
 })
 
 export const UserReviewContent = styled('div', {
