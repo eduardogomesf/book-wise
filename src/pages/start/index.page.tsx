@@ -9,7 +9,11 @@ import {
   CenterContent,
   ContentContainer,
   Header,
+  Label,
   Main,
+  PopularBookItem,
+  PopularBooksLabelContainer,
+  PopularBooksList,
   RecentReviewsList,
   RedirectButton,
   RightContent,
@@ -25,6 +29,9 @@ import { authOptions } from "../api/auth/[...nextauth].api";
 import { mapReviewForStartPage } from "../../mappers/review";
 import { RecentReview } from "./components/RecentReview";
 import { UserReview } from "./components/UserReview";
+import Image from "next/image";
+import { Rating } from "../../components/Rating";
+import { handleCoverImagePath } from "../../utils";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
@@ -44,6 +51,8 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
     return getUserByIdResponse.data
   })
 
+  const books = latestReviews.map((review) => review.book).slice(0, 5)
+
   return (
     <StartContainer>
       <Sidebar user={user} />
@@ -61,7 +70,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
             {session && userLastReview && (
               <UserReviewContainer>
                 <UserReviewLabelContainer>
-                  <span>Your last review</span>
+                  <Label>Your last review</Label>
 
                   <RedirectButton href={""}>
                     See all
@@ -75,7 +84,7 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
 
 
             <RecentReviewsList>
-              <span>Latest reviews</span>
+              <Label>Latest reviews</Label>
               {latestReviews?.map((latestReview) => (
                 <RecentReview review={latestReview} key={latestReview.id} as="li" />
               ))}
@@ -83,6 +92,30 @@ export default function Start({ latestReviews, userLastReview }: StartProps) {
           </CenterContent>
 
           <RightContent>
+            <PopularBooksList>
+              <PopularBooksLabelContainer>
+                <Label>Popular books</Label>
+
+                <RedirectButton href={""}>
+                  See all
+                  <CaretRight size={16} />
+                </RedirectButton>
+              </PopularBooksLabelContainer>
+
+              {books && books.map((book) => (
+                <PopularBookItem key={book.id}>
+                  <Image src={handleCoverImagePath(book.coverUrl)} alt={"Book cover"} quality={80} width={64} height={94} />
+                  <div>
+                    <strong>{book.name}</strong>
+                    <span>{book.author}</span>
+
+                    <div>
+                      <Rating rate={4} />
+                    </div>
+                  </div>
+                </PopularBookItem>
+              ))}
+            </PopularBooksList>
           </RightContent>
         </ContentContainer>
 
