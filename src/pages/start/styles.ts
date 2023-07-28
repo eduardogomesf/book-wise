@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { styled } from "../../styles";
-import { Rating } from "../../components/Rating";
 
 export const StartContainer = styled('div', {
   margin: '$5',
