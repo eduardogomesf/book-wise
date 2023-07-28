@@ -12,7 +12,7 @@ export const Header = styled('header', {
 
   h1: {
     color: '$gray100',
-    fontSize: '$lg',
+    fontSize: '$2xl',
     fontWeight: '$bold'
   }
 })
