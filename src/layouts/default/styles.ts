@@ -13,4 +13,5 @@ export const DefaultLayoutMain = styled('main', {
   gap: '$10',
 
   width: '100%',
+  maxWidth: 'calc(100% - (6rem + 232px + 5rem))',
 })
