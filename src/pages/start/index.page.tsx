@@ -2,22 +2,18 @@ import { CaretRight, ChartLineUp } from "phosphor-react";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useQuery } from "@tanstack/react-query";
 
-import { Sidebar } from "../../components/Sidebar";
 import {
   CenterContent,
   ContentContainer,
   Header,
   Label,
-  Main,
   PopularBookItem,
   PopularBooksLabelContainer,
   PopularBooksList,
   RecentReviewsList,
   RedirectButton,
   RightContent,
-  StartContainer,
   UserReviewContainer,
   UserReviewLabelContainer
 } from "./styles";
@@ -32,6 +28,8 @@ import Image from "next/image";
 import { Rating } from "../../components/Rating";
 import { handleCoverImagePath } from "../../utils";
 import { Book } from "../../types/book";
+import { DefaultLayout } from "../../layouts/default";
+import { ReactElement } from "react";
 
 type StartProps = {
   latestReviews: ReviewWithBook[]
@@ -43,74 +41,77 @@ export default function Start({ latestReviews = [], userLastReview, popularBooks
   const { data: session } = useSession()
 
   return (
-    <StartContainer>
-      <Sidebar />
+    <>
+      <Header>
+        <ChartLineUp size={32} />
+        <h1>
+          Start
+        </h1>
+      </Header>
 
-      <Main>
-        <Header>
-          <ChartLineUp size={32} />
-          <h1>
-            Start
-          </h1>
-        </Header>
-
-        <ContentContainer>
-          <CenterContent>
-            {session && userLastReview && (
-              <UserReviewContainer>
-                <UserReviewLabelContainer>
-                  <Label>Your last review</Label>
-
-                  <RedirectButton href={""}>
-                    See all
-                    <CaretRight size={16} />
-                  </RedirectButton>
-                </UserReviewLabelContainer>
-
-                <UserReview review={userLastReview} />
-              </UserReviewContainer>
-            )}
-
-
-            <RecentReviewsList>
-              <Label>Latest reviews</Label>
-              {latestReviews?.map((latestReview) => (
-                <RecentReview review={latestReview} key={latestReview.id} as="li" />
-              ))}
-            </RecentReviewsList>
-          </CenterContent>
-
-          <RightContent>
-            <PopularBooksList>
-              <PopularBooksLabelContainer>
-                <Label>Popular books</Label>
+      <ContentContainer>
+        <CenterContent>
+          {session && userLastReview && (
+            <UserReviewContainer>
+              <UserReviewLabelContainer>
+                <Label>Your last review</Label>
 
                 <RedirectButton href={""}>
                   See all
                   <CaretRight size={16} />
                 </RedirectButton>
-              </PopularBooksLabelContainer>
+              </UserReviewLabelContainer>
 
-              {popularBooks && popularBooks.map((book) => (
-                <PopularBookItem key={book.id}>
-                  <Image src={handleCoverImagePath(book.coverUrl)} alt={"Book cover"} quality={80} width={64} height={94} />
+              <UserReview review={userLastReview} />
+            </UserReviewContainer>
+          )}
+
+
+          <RecentReviewsList>
+            <Label>Latest reviews</Label>
+            {latestReviews?.map((latestReview) => (
+              <RecentReview review={latestReview} key={latestReview.id} as="li" />
+            ))}
+          </RecentReviewsList>
+        </CenterContent>
+
+        <RightContent>
+          <PopularBooksList>
+            <PopularBooksLabelContainer>
+              <Label>Popular books</Label>
+
+              <RedirectButton href={""}>
+                See all
+                <CaretRight size={16} />
+              </RedirectButton>
+            </PopularBooksLabelContainer>
+
+            {popularBooks && popularBooks.map((book) => (
+              <PopularBookItem key={book.id}>
+                <Image src={handleCoverImagePath(book.coverUrl)} alt={"Book cover"} quality={80} width={64} height={94} />
+                <div>
+                  <strong>{book.name}</strong>
+                  <span>{book.author}</span>
+
                   <div>
-                    <strong>{book.name}</strong>
-                    <span>{book.author}</span>
-
-                    <div>
-                      <Rating rate={book.rate ?? 0} />
-                    </div>
+                    <Rating rate={book.rate ?? 0} />
                   </div>
-                </PopularBookItem>
-              ))}
-            </PopularBooksList>
-          </RightContent>
-        </ContentContainer>
+                </div>
+              </PopularBookItem>
+            ))}
+          </PopularBooksList>
+        </RightContent>
+      </ContentContainer>
 
+    </>
+  )
+}
 
-      </Main>
-    </StartContainer>
+Start.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <DefaultLayout>
+      {page}
+    </DefaultLayout>
   )
 }
 

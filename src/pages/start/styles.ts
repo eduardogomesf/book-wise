@@ -1,21 +1,6 @@
 import Link from "next/link";
 import { styled } from "../../styles";
 
-export const StartContainer = styled('div', {
-  margin: '$5',
-
-  display: 'flex'
-})
-
-export const Main = styled('main', {
-  marginLeft: '6rem',
-  marginTop: '3.125rem',
-
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '$10'
-})
-
 export const Header = styled('header', {
   display: 'flex',
   alignItems: 'center',
