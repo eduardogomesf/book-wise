@@ -22,7 +22,6 @@ import {
   UserReviewLabelContainer
 } from "./styles";
 
-import { User } from "../../types/user";
 import { api } from "../../lib/axios";
 import { ReviewWithBook } from "../../types/review";
 import { authOptions } from "../api/auth/[...nextauth].api";
@@ -43,19 +42,9 @@ type StartProps = {
 export default function Start({ latestReviews = [], userLastReview, popularBooks = [] }: StartProps) {
   const { data: session } = useSession()
 
-  const { data: user } = useQuery<User | null>(['user', session?.user.id], async () => {
-    if (!session) {
-      return null
-    }
-
-    const getUserByIdResponse = await api.get(`/users/${session.user.id}`)
-
-    return getUserByIdResponse.data
-  })
-
   return (
     <StartContainer>
-      <Sidebar user={user} />
+      <Sidebar />
 
       <Main>
         <Header>

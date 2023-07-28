@@ -7,16 +7,24 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import { Avatar } from "../Avatar";
 import { User } from "../../types/user";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../lib/axios";
 
-interface SidebarProps {
-  user: User | null | undefined
-}
-
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar() {
   const router = useRouter()
   const { data: session } = useSession()
 
   const currentRoute = router.pathname;
+
+  const { data: user } = useQuery<User | null>(['user', session?.user.id], async () => {
+    if (!session) {
+      return null
+    }
+
+    const getUserByIdResponse = await api.get(`/users/${session.user.id}`)
+
+    return getUserByIdResponse.data
+  })
 
   async function handleSignInRedirect() {
     if (!session) {
