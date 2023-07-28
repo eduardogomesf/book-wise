@@ -76,4 +76,50 @@ export const InputContainer = styled('div', {
 
 })
 
+export const TagsContainer = styled('div', {
+  marginTop: '$10',
 
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '$3',
+})
+
+export const Tag = styled('button', {
+  all: 'unset',
+
+  boxSizing: 'border-box',
+
+  cursor: 'pointer',
+
+  border: '1px solid $purple100',
+  borderRadius: '$full',
+
+  padding: '$1 $4',
+
+  fontSize: '$md',
+  fontWeight: '$regular',
+  lineHeight: '$base',
+
+  variants: {
+    selected: {
+      true: {
+        backgroundColor: '$purple200',
+        color: '$gray100',
+        borderColor: '$purple200',
+      },
+      false: {
+        backgroundColor: '$transparent',
+        color: '$purple100',
+      }
+    }
+  },
+
+  transition: 'all 0.2s ease-in-out',
+
+  '&:hover': {
+    backgroundColor: '$purple200',
+    color: '$gray100',
+  }
+
+})

@@ -1,6 +1,6 @@
 import { ReactElement } from "react"
 import { DefaultLayout } from "../../layouts/default"
-import { ExplorerContainer, Header, InputContainer, TitleContainer } from "./styles"
+import { ExplorerContainer, Header, InputContainer, Tag, TagsContainer, TitleContainer } from "./styles"
 import { Binoculars, MagnifyingGlass } from "phosphor-react"
 
 export default function Explore() {
@@ -17,6 +17,18 @@ export default function Explore() {
           <MagnifyingGlass size={32} />
         </InputContainer>
       </Header>
+
+      <TagsContainer>
+        <Tag selected={true}>All</Tag>
+
+        <Tag selected={false}>Computing</Tag>
+
+        <Tag selected={false}>Education</Tag>
+
+        <Tag selected={false}>Fictitious</Tag>
+
+        <Tag selected={false}>Science Fiction</Tag>
+      </TagsContainer>
     </ExplorerContainer>
   )
 }
