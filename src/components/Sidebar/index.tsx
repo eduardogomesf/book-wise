@@ -56,10 +56,13 @@ export function Sidebar() {
           <Binoculars width={24} height={24} />
           Explore
         </Link>
-        <Link href={"/profile"} active={currentRoute === '/profile'}>
-          <UserIcon width={24} height={24} />
-          Profile
-        </Link>
+        {
+          (session && session.user) &&
+          <Link href={`/profile/${session?.user.id}`} active={currentRoute.includes('/profile')}>
+            <UserIcon width={24} height={24} />
+            Profile
+          </Link>
+        }
       </Navbar>
 
       {user ? (
