@@ -6,3 +6,7 @@ export type Book = {
   numberOfRatings?: number
   rate?: number
 }
+
+export type BookWithUserRating = Book & {
+  alreadyRead: boolean
+}
