@@ -1,15 +1,21 @@
-import { ReactElement, useState } from "react"
+import { ReactElement, useEffect, useState } from "react"
 import { DefaultLayout } from "../../layouts/default"
-import { ExplorerContainer, Header, InputContainer, Tag, TagsContainer, TitleContainer } from "./styles"
+import { BookCard, BooksContainer, ExplorerContainer, Header, InputContainer, Tag, TagsContainer, TitleContainer } from "./styles"
 import { Binoculars, MagnifyingGlass } from "phosphor-react"
 import { GetServerSideProps } from "next"
 import { Category } from "../../types/category"
 import { api } from "../../lib/axios"
+import { useQuery } from "@tanstack/react-query"
+import { Book } from "../../types/book"
+import Image from "next/image"
+import { handleCoverImagePath } from "../../utils"
+import { Rating } from "../../components/Rating"
 
 type ExploreProps = {
   categories: Category[]
 }
 export default function Explore({ categories = [] }: ExploreProps) {
+  const [search, setSearch] = useState('')
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['All'])
 
   function handleSelectCategory(categoryId: string) {
@@ -29,6 +35,13 @@ export default function Explore({ categories = [] }: ExploreProps) {
     }
   }
 
+  const { data: books = [] } = useQuery<Book[] | []>(['books'], async () => {
+
+    const getBooksResponse = await api.get(`/books/popular`)
+
+    return getBooksResponse.data.books
+  })
+
   function resetCategories() {
     setSelectedCategories(['All'])
   }
@@ -42,7 +55,12 @@ export default function Explore({ categories = [] }: ExploreProps) {
         </TitleContainer>
 
         <InputContainer>
-          <input type="text" placeholder="Search for actor or book" />
+          <input
+            type="text"
+            placeholder="Search for actor or book"
+            value={search}
+            onChange={event => setSearch(event.target.value)}
+          />
           <MagnifyingGlass size={32} />
         </InputContainer>
       </Header>
@@ -65,6 +83,21 @@ export default function Explore({ categories = [] }: ExploreProps) {
           </Tag>
         ))}
       </TagsContainer>
+
+      <BooksContainer>
+        {books?.map(book => (
+          <BookCard key={book.id}>
+            <Image src={handleCoverImagePath(book.coverUrl)} alt={"Book cover"} quality={80} width={108} height={152} />
+            <div>
+              <div>
+                <strong>{book.name}</strong>
+                <span>{book.author}</span>
+              </div>
+              <Rating rate={book.rate!} />
+            </div>
+          </BookCard>
+        ))}
+      </BooksContainer>
     </ExplorerContainer>
   )
 }

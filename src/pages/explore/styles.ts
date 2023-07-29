@@ -124,3 +124,52 @@ export const Tag = styled('button', {
   }
 
 })
+
+export const BooksContainer = styled('div', {
+  marginTop: '3rem',
+
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: '$5'
+})
+
+export const BookCard = styled('button', {
+  all: 'unset',
+
+  boxSizing: 'border-box',
+
+  cursor: 'pointer',
+
+  display: 'flex',
+  gap: '$5',
+
+  backgroundColor: '$gray700',
+
+  borderRadius: '$md',
+  padding: '$5 $4',
+
+  '> div': {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+
+    '> div': {
+      strong: {
+        display: 'block',
+        color: '$gray100',
+        fontSize: '$md',
+        fontWeight: '$bold',
+        lineHeight: '$short',
+      },
+
+      span: {
+        color: '$gray400',
+        fontSize: '$sm',
+        fontWeight: '$regular',
+        lineHeight: '$base',
+      }
+    }
+  }
+
+})

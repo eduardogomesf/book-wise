@@ -5,7 +5,7 @@ type RatingProps = {
   rate: number;
 }
 
-export function Rating({ rate }: RatingProps) {
+export function Rating({ rate = 0 }: RatingProps) {
   return (
     <RatingBox>
       {
