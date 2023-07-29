@@ -55,7 +55,7 @@ export default function Explore({ categories = [] }: ExploreProps) {
           All
         </Tag>
 
-        {categories.slice(0, 7).map(category => (
+        {categories.map(category => (
           <Tag
             key={category.id}
             onClick={() => handleSelectCategory(category.id)}

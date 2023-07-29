@@ -83,6 +83,7 @@ export const TagsContainer = styled('div', {
   justifyContent: 'flex-start',
   alignItems: 'center',
   gap: '$3',
+  flexWrap: 'wrap',
 })
 
 export const Tag = styled('button', {
