@@ -6,13 +6,13 @@ import Image from "next/image"
 import { useSession } from "next-auth/react"
 import { debounce } from 'lodash'
 
-import { BookCard, BooksContainer, ExplorerContainer, Header, InputContainer, Tag, TagsContainer, TitleContainer } from "./styles"
+import { BookCard, BooksContainer, ExplorerContainer, Header, InputContainer, ReadStamp, Tag, TagsContainer, TitleContainer } from "./styles"
 import { DefaultLayout } from "../../layouts/default"
 import { Rating } from "../../components/Rating"
 
 import { api } from "../../lib/axios"
 import { Category } from "../../types/category"
-import { Book } from "../../types/book"
+import { Book, BookWithUserRating } from "../../types/book"
 import { handleCoverImagePath } from "../../utils"
 
 type ExploreProps = {
@@ -46,7 +46,7 @@ export default function Explore({ categories = [] }: ExploreProps) {
     }
   }
 
-  const { data: books = [] } = useQuery<Book[] | []>(['books', search, selectedCategories], async () => {
+  const { data: books = [] } = useQuery<BookWithUserRating[] | []>(['books', search, selectedCategories], async () => {
 
     const getBooksResponse = await api.get(`/books`, {
       params: {
@@ -120,6 +120,8 @@ export default function Explore({ categories = [] }: ExploreProps) {
               </div>
               <Rating rate={book.rate!} />
             </div>
+
+            {book.alreadyRead && <ReadStamp>Read</ReadStamp>}
           </BookCard>
         ))}
       </BooksContainer>

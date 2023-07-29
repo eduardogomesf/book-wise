@@ -137,6 +137,7 @@ export const BookCard = styled('button', {
   all: 'unset',
 
   boxSizing: 'border-box',
+  position: 'relative',
 
   cursor: 'pointer',
 
@@ -172,4 +173,26 @@ export const BookCard = styled('button', {
     }
   }
 
+})
+
+export const ReadStamp = styled('span', {
+  position: 'absolute',
+  right: 0,
+  top: 0,
+
+  borderTopRightRadius: '$md',
+  borderBottomLeftRadius: '$md',
+
+  padding: '$1 $3',
+
+  backgroundColor: '$green300',
+  color: '$green100',
+
+  textTransform: 'uppercase',
+  fontSize: '$xs',
+  fontWeight: '$bold',
+  lineHeight: '$shorter',
+
+
+  zIndex: 10,
 })
