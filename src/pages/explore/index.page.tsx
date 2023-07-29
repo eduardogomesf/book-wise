@@ -16,7 +16,7 @@ type ExploreProps = {
 }
 export default function Explore({ categories = [] }: ExploreProps) {
   const [search, setSearch] = useState('')
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['All'])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
 
   function handleSelectCategory(categoryId: string) {
     const categoryIsAlreadySelected = selectedCategories.includes(categoryId)
@@ -24,13 +24,13 @@ export default function Explore({ categories = [] }: ExploreProps) {
 
     if (categoryIsAlreadySelected) {
       if (numberOfSelectedCategories === 1) {
-        setSelectedCategories(['All'])
+        setSelectedCategories([])
         return
       }
 
       setSelectedCategories(selectedCategories.filter(category => category !== categoryId))
     } else {
-      const oldCategories = selectedCategories.filter(category => category !== 'All')
+      const oldCategories = [...selectedCategories]
       setSelectedCategories([...oldCategories, categoryId])
     }
   }
@@ -43,7 +43,7 @@ export default function Explore({ categories = [] }: ExploreProps) {
   })
 
   function resetCategories() {
-    setSelectedCategories(['All'])
+    setSelectedCategories([])
   }
 
   return (
@@ -67,7 +67,7 @@ export default function Explore({ categories = [] }: ExploreProps) {
 
       <TagsContainer>
         <Tag
-          selected={selectedCategories.includes('All')}
+          selected={selectedCategories.length === 0}
           onClick={() => resetCategories()}
         >
           All
