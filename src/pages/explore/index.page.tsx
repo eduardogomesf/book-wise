@@ -1,21 +1,29 @@
-import { ReactElement, useEffect, useState } from "react"
-import { DefaultLayout } from "../../layouts/default"
-import { BookCard, BooksContainer, ExplorerContainer, Header, InputContainer, Tag, TagsContainer, TitleContainer } from "./styles"
+import { ReactElement, useState } from "react"
 import { Binoculars, MagnifyingGlass } from "phosphor-react"
 import { GetServerSideProps } from "next"
-import { Category } from "../../types/category"
-import { api } from "../../lib/axios"
 import { useQuery } from "@tanstack/react-query"
-import { Book } from "../../types/book"
 import Image from "next/image"
-import { handleCoverImagePath } from "../../utils"
-import { Rating } from "../../components/Rating"
 import { useSession } from "next-auth/react"
+import { debounce } from 'lodash'
+
+import { BookCard, BooksContainer, ExplorerContainer, Header, InputContainer, Tag, TagsContainer, TitleContainer } from "./styles"
+import { DefaultLayout } from "../../layouts/default"
+import { Rating } from "../../components/Rating"
+
+import { api } from "../../lib/axios"
+import { Category } from "../../types/category"
+import { Book } from "../../types/book"
+import { handleCoverImagePath } from "../../utils"
 
 type ExploreProps = {
   categories: Category[]
 }
+
+const updateStateUsingDebounceTechnique = debounce((value: string, setState: (value: any) => void) => {
+  setState(value)
+}, 500)
 export default function Explore({ categories = [] }: ExploreProps) {
+  const [valueInInput, setValueInInput] = useState('')
   const [search, setSearch] = useState('')
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
 
@@ -55,6 +63,14 @@ export default function Explore({ categories = [] }: ExploreProps) {
     setSelectedCategories([])
   }
 
+  function handleChangeText(event: any) {
+    const value = event.target.value
+
+    setValueInInput(value)
+
+    updateStateUsingDebounceTechnique(value, setSearch)
+  }
+
   return (
     <ExplorerContainer>
       <Header>
@@ -67,8 +83,8 @@ export default function Explore({ categories = [] }: ExploreProps) {
           <input
             type="text"
             placeholder="Search for actor or book"
-            value={search}
-            onChange={event => setSearch(event.target.value)}
+            value={valueInInput}
+            onChange={event => handleChangeText(event)}
           />
           <MagnifyingGlass size={32} />
         </InputContainer>
