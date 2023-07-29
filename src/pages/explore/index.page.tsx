@@ -10,6 +10,7 @@ import { Book } from "../../types/book"
 import Image from "next/image"
 import { handleCoverImagePath } from "../../utils"
 import { Rating } from "../../components/Rating"
+import { useSession } from "next-auth/react"
 
 type ExploreProps = {
   categories: Category[]
@@ -17,6 +18,8 @@ type ExploreProps = {
 export default function Explore({ categories = [] }: ExploreProps) {
   const [search, setSearch] = useState('')
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+
+  const { data: session } = useSession()
 
   function handleSelectCategory(categoryId: string) {
     const categoryIsAlreadySelected = selectedCategories.includes(categoryId)
@@ -35,9 +38,15 @@ export default function Explore({ categories = [] }: ExploreProps) {
     }
   }
 
-  const { data: books = [] } = useQuery<Book[] | []>(['books'], async () => {
+  const { data: books = [] } = useQuery<Book[] | []>(['books', search, selectedCategories], async () => {
 
-    const getBooksResponse = await api.get(`/books/popular`)
+    const getBooksResponse = await api.get(`/books`, {
+      params: {
+        userId: session?.user.id,
+        search,
+        category: String(selectedCategories)
+      }
+    })
 
     return getBooksResponse.data.books
   })
