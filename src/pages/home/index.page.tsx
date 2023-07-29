@@ -46,10 +46,6 @@ export default function Home() {
         <span>Sign in or access as a visitor.</span>
 
         <div>
-          <LoginButton type="button">
-            <Image src={googleIcon} alt="Google Logo" width={32} height={32} />
-            Sign in with Google
-          </LoginButton>
           <LoginButton type="button" onClick={() => handleGithubSignIn()}>
             <Image src={githubIcon} alt="Github Logo" width={32} height={32} />
             Sign in with Github
