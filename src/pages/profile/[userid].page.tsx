@@ -7,7 +7,7 @@ import { TextInput } from "../../components/TextInput"
 import { GetServerSideProps } from "next"
 import { api } from "../../lib/axios"
 import { ReviewWithBook } from "../../types/review"
-import { ReviewItem } from "./ReviewItem"
+import { ReviewItem } from "./components/ReviewItem"
 
 type ProfileParams = {
   reviews: ReviewWithBook[]

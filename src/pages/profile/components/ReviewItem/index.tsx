@@ -1,9 +1,9 @@
 import Image from "next/image"
-import { Rating } from "../../../components/Rating"
-import { ReviewWithBook } from "../../../types/review"
+import { Rating } from "../../../../components/Rating"
+import { ReviewWithBook } from "../../../../types/review"
 import { ReviewItemContainer, ReviewItemContent } from "./styles"
 import { formatDistanceToNow } from "date-fns"
-import { handleCoverImagePath } from "../../../utils"
+import { handleCoverImagePath } from "../../../../utils"
 
 type ReviewItemProps = {
   review: ReviewWithBook
