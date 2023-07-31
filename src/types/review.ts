@@ -9,7 +9,7 @@ export type ReviewWithBook = {
     author: string
     coverUrl: string
   }
-  user: {
+  user?: {
     id: string
     avatarUrl: string
     name: string
