@@ -122,9 +122,10 @@ export const SignOutButton = styled('button', {
 
   cursor: 'pointer',
 
+  transition: 'background-color 0.2s ease-in-out',
+
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.05)',
-    transition: 'background-color 0.2s ease-in-out',
   },
 
   'svg': {
