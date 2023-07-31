@@ -1,19 +1,20 @@
 import { ReactElement, useState } from "react"
-import { Binoculars, MagnifyingGlass } from "phosphor-react"
+import { Binoculars } from "phosphor-react"
 import { GetServerSideProps } from "next"
 import { useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import { useSession } from "next-auth/react"
 import { debounce } from 'lodash'
 
-import { BookCard, BooksContainer, ExplorerContainer, Header, InputContainer, ReadStamp, Tag, TagsContainer, TitleContainer } from "./styles"
+import { BookCard, BooksContainer, ExplorerContainer, Header, ReadStamp, Tag, TagsContainer, TitleContainer } from "./styles"
 import { DefaultLayout } from "../../layouts/default"
 import { Rating } from "../../components/Rating"
 
 import { api } from "../../lib/axios"
 import { Category } from "../../types/category"
-import { Book, BookWithUserRating } from "../../types/book"
+import { BookWithUserRating } from "../../types/book"
 import { handleCoverImagePath } from "../../utils"
+import { TextInput } from "../../components/TextInput"
 
 type ExploreProps = {
   categories: Category[]
@@ -79,15 +80,12 @@ export default function Explore({ categories = [] }: ExploreProps) {
           <h1>Explore</h1>
         </TitleContainer>
 
-        <InputContainer>
-          <input
-            type="text"
-            placeholder="Search for actor or book"
-            value={valueInInput}
-            onChange={event => handleChangeText(event)}
-          />
-          <MagnifyingGlass size={32} />
-        </InputContainer>
+        <TextInput
+          placeholder="Search for actor or book"
+          value={valueInInput}
+          handleChangeText={event => handleChangeText(event)}
+          size={"md"}
+        />
       </Header>
 
       <TagsContainer>
