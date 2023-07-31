@@ -49,7 +49,7 @@ export const InputContainer = styled('div', {
         width: '27.063rem',
       },
       lg: {
-        width: '27.063rem',
+        width: '100%',
       }
     }
   }
