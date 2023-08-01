@@ -12,7 +12,7 @@ type ReviewItemProps = {
 export function ReviewItem({ review }: ReviewItemProps) {
   return (
     <ReviewItemContainer>
-      <span>{formatDistanceToNow(new Date(review.createdAt))}</span>
+      <span>{formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}</span>
       <ReviewItemContent>
         <div>
           <Image src={handleCoverImagePath(review.book.coverUrl)} alt="Book cover" width={98} height={134} />
