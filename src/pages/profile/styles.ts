@@ -1,4 +1,3 @@
-import { Rating } from "../../components/Rating";
 import { styled } from "../../styles";
 
 export const ProfileContainer = styled("div", {
@@ -56,8 +55,6 @@ export const ProfileCenterContent = styled("div", {
   alignItems: 'center',
 
   width: '624px',
-
-
 })
 
 export const ReviewList = styled("div", {
@@ -75,4 +72,78 @@ export const ProfileRightContent = styled("div", {
   display: "flex",
   flexDirection: 'column',
   alignItems: 'center',
+  gap: '$8',
+
+  width: '308px',
+
+  borderLeft: '1px solid $gray700',
 })
+
+export const UserInfo = styled("div", {
+  display: "flex",
+  flexDirection: 'column',
+  alignItems: 'center',
+
+  '> strong': {
+    display: 'block',
+    marginTop: '$5',
+
+    color: '$gray100',
+    fontSize: '$md',
+    fontWeight: '$bold',
+    lineHeight: '$short',
+  },
+
+  '> span': {
+    color: '$gray400',
+    fontSize: '$sm',
+    fontWeight: '$regular',
+    lineHeight: '$base',
+  }
+})
+
+export const Separator = styled("div", {
+  height: '4px',
+  width: '32px',
+  borderRadius: '$full',
+
+  background: '$gradient-horizontal',
+})
+
+export const UserReadingInfoList = styled("div", {
+  display: "flex",
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  gap: '$10',
+})
+
+export const UserReadingInfoItem = styled("div", {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '$5',
+
+  svg: {
+    color: '$green100'
+  },
+
+  div: {
+    strong: {
+      display: 'block',
+
+      color: '$gray200',
+      lineHeight: '$short',
+      fontSize: '$md',
+      fontWeight: '$bold',
+    },
+
+    span: {
+      color: '$gray300',
+      fontSize: '$sm',
+      fontWeight: '$regular',
+      lineHeight: '$base',
+    }
+  }
+})
+
+

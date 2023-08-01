@@ -1,13 +1,14 @@
 import { ReactElement, useEffect, useState } from "react"
 import { DefaultLayout } from "../../layouts/default"
-import { ProfileCenterContent, ProfileContainer, ProfileContent, ProfileHeader, ProfileRightContent, ReviewList } from "./styles"
-import { CaretLeft } from "phosphor-react"
+import { ProfileCenterContent, ProfileContainer, ProfileContent, ProfileHeader, ProfileRightContent, ReviewList, Separator, UserInfo, UserReadingInfoItem, UserReadingInfoList } from "./styles"
+import { BookOpen, BookmarkSimple, Books, CaretLeft, UserList } from "phosphor-react"
 import { useRouter } from "next/router"
 import { TextInput } from "../../components/TextInput"
 import { GetServerSideProps } from "next"
 import { api } from "../../lib/axios"
 import { ReviewWithBook } from "../../types/review"
 import { ReviewItem } from "./components/ReviewItem"
+import { Avatar } from "../../components/Avatar"
 
 type ProfileParams = {
   reviews: ReviewWithBook[]
@@ -57,7 +58,48 @@ export default function Profile({ reviews = [] }: ProfileParams) {
         </ProfileCenterContent>
 
         <ProfileRightContent>
-          <span>Right content</span>
+          <UserInfo>
+            <Avatar src="https://avatars.githubusercontent.com/u/58858236?v=4" width={72} height={72} />
+            <strong>Eduardo Gomes</strong>
+            <span>Member since 2019</span>
+          </UserInfo>
+
+          <Separator />
+
+          <UserReadingInfoList>
+            <UserReadingInfoItem>
+              <BookOpen size={32} />
+              <div>
+                <strong>3600</strong>
+                <span>Pages read</span>
+              </div>
+            </UserReadingInfoItem>
+
+            <UserReadingInfoItem>
+              <Books size={32} />
+              <div>
+                <strong>10</strong>
+                <span>Rated books</span>
+              </div>
+            </UserReadingInfoItem>
+
+            <UserReadingInfoItem>
+              <UserList size={32} />
+              <div>
+                <strong>6</strong>
+                <span>Authors read</span>
+              </div>
+            </UserReadingInfoItem>
+
+            <UserReadingInfoItem>
+              <BookmarkSimple size={32} />
+              <div>
+                <strong>Computing</strong>
+                <span>Most read category</span>
+              </div>
+            </UserReadingInfoItem>
+
+          </UserReadingInfoList>
         </ProfileRightContent>
       </ProfileContent>
     </ProfileContainer>
