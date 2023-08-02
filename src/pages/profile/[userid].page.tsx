@@ -1,20 +1,25 @@
 import { ReactElement, useEffect, useState } from "react"
-import { DefaultLayout } from "../../layouts/default"
-import { ProfileCenterContent, ProfileContainer, ProfileContent, ProfileHeader, ProfileRightContent, ReviewList, Separator, UserInfo, UserReadingInfoItem, UserReadingInfoList } from "./styles"
+import { GetServerSideProps } from "next"
 import { BookOpen, BookmarkSimple, Books, CaretLeft, UserList } from "phosphor-react"
 import { useRouter } from "next/router"
+
+import { DefaultLayout } from "../../layouts/default"
+import { ProfileCenterContent, ProfileContainer, ProfileContent, ProfileHeader, ProfileRightContent, ReviewList, Separator, UserInfo, UserReadingInfoItem, UserReadingInfoList } from "./styles"
 import { TextInput } from "../../components/TextInput"
-import { GetServerSideProps } from "next"
-import { api } from "../../lib/axios"
-import { ReviewWithBook } from "../../types/review"
 import { ReviewItem } from "./components/ReviewItem"
 import { Avatar } from "../../components/Avatar"
 
+import { api } from "../../lib/axios"
+import { ReviewWithBook } from "../../types/review"
+import { UserProfile } from "../../types/user"
+import { format } from "date-fns"
+
 type ProfileParams = {
   reviews: ReviewWithBook[]
+  userProfile: UserProfile
 }
 
-export default function Profile({ reviews = [] }: ProfileParams) {
+export default function Profile({ reviews = [], userProfile }: ProfileParams) {
   const [userReviews, setUserReviews] = useState<ReviewWithBook[]>(reviews)
   const [search, setSearch] = useState('')
 
@@ -59,9 +64,9 @@ export default function Profile({ reviews = [] }: ProfileParams) {
 
         <ProfileRightContent>
           <UserInfo>
-            <Avatar src="https://avatars.githubusercontent.com/u/58858236?v=4" width={72} height={72} />
-            <strong>Eduardo Gomes</strong>
-            <span>Member since 2019</span>
+            <Avatar src={userProfile.user.avatarUrl} width={72} height={72} />
+            <strong>{userProfile.user.name}</strong>
+            <span>Member since {format(new Date(userProfile.user.createdAt), 'MMMM, yyyy')}</span>
           </UserInfo>
 
           <Separator />
@@ -70,7 +75,7 @@ export default function Profile({ reviews = [] }: ProfileParams) {
             <UserReadingInfoItem>
               <BookOpen size={32} />
               <div>
-                <strong>3600</strong>
+                <strong>{userProfile.statistics.numberOfPagesRead}</strong>
                 <span>Pages read</span>
               </div>
             </UserReadingInfoItem>
@@ -78,7 +83,7 @@ export default function Profile({ reviews = [] }: ProfileParams) {
             <UserReadingInfoItem>
               <Books size={32} />
               <div>
-                <strong>10</strong>
+                <strong>{userProfile.statistics.numberOfRatings}</strong>
                 <span>Rated books</span>
               </div>
             </UserReadingInfoItem>
@@ -86,7 +91,7 @@ export default function Profile({ reviews = [] }: ProfileParams) {
             <UserReadingInfoItem>
               <UserList size={32} />
               <div>
-                <strong>6</strong>
+                <strong>{userProfile.statistics.numberOfAuthorsRead}</strong>
                 <span>Authors read</span>
               </div>
             </UserReadingInfoItem>
@@ -94,7 +99,7 @@ export default function Profile({ reviews = [] }: ProfileParams) {
             <UserReadingInfoItem>
               <BookmarkSimple size={32} />
               <div>
-                <strong>Computing</strong>
+                <strong>{userProfile.statistics.mostReadCategory}</strong>
                 <span>Most read category</span>
               </div>
             </UserReadingInfoItem>
@@ -126,15 +131,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
-  const [userReviews] = await Promise.all([
-    getUserReviews(String(userId))
+  const [userReviews, userProfile] = await Promise.all([
+    getUserReviews(String(userId)),
+    getUserProfileInfo(String(userId))
   ])
 
   return {
     props: {
-      reviews: userReviews
+      reviews: userReviews,
+      userProfile
     }
   }
+}
+
+const getUserProfileInfo = async (userId: string) => {
+  const response = await api.get(`http://localhost:3000/api/users/${userId}/profile`)
+  return response.data
 }
 
 const getUserReviews = async (userId: string) => {
